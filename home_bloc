@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'home_event.dart';
+import 'home_state.dart';
+import '../../domain/entities/home_service.dart';
+
+class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  HomeBloc() : super(HomeInitial()) {
+    on<LoadHomeServices>((event, emit) async {
+      emit(HomeLoading());
+      try {
+        // Simulate fetching services from a repository
+        await Future.delayed(const Duration(seconds: 1));
+        final services = _getMockServices();
+        emit(HomeLoaded(services: services));
+      } catch (e) {
+        emit(const HomeError(message: 'Failed to load services'));
+      }
+    });
+  }
+
+  List<HomeService> _getMockServices() {
+    return [
+      // Core Features
+      const HomeService(id: '1', name: 'Marketplace', icon: Icons.storefront, color: Colors.blue),
+      const HomeService(id: '2', name: 'Food Delivery', icon: Icons.fastfood, color: Colors.orange),
+      const HomeService(id: '3', name: 'Wallet', icon: Icons.account_balance_wallet, color: Colors.green),
+      const HomeService(id: '4', name: 'Bill Pay', icon: Icons.receipt_long, color: Colors.teal),
+      const HomeService(id: '5', name: 'Ride-Hailing', icon: Icons.local_taxi, color: Color(0xFFFBC02D)),
+      const HomeService(id: '6', name: 'Handymen', icon: Icons.build, color: Colors.brown),
+      const HomeService(id: '7', name: 'Real Estate', icon: Icons.home_work, color: Colors.indigo),
+      const HomeService(id: '8', name: 'Job Board', icon: Icons.work, color: Colors.blueGrey),
+      const HomeService(id: '9', name: 'Tickets', icon: Icons.confirmation_number, color: Colors.pink),
+      const HomeService(id: '10', name: 'Health Hub', icon: Icons.local_hospital, color: Colors.red),
+      
+      // Innovation Features
+      const HomeService(id: '11', name: 'AI Visual Search', icon: Icons.camera_alt, color: Colors.purple, isInnovation: true),
+      const HomeService(id: '12', name: 'Smart Barter', icon: Icons.swap_horiz, color: Colors.deepOrange, isInnovation: true),
+      const HomeService(id: '13', name: 'Voice-Commerce', icon: Icons.mic, color: Colors.lightBlue, isInnovation: true),
+      const HomeService(id: '14', name: 'Hagbad Lending', icon: Icons.group, color: Color(0xFF00C853), isInnovation: true),
+      const HomeService(id: '15', name: 'AI Tailor', icon: Icons.checkroom, color: Colors.deepPurple, isInnovation: true),
+      const HomeService(id: '16', name: 'Shared Delivery', icon: Icons.delivery_dining, color: Colors.cyan, isInnovation: true),
+      const HomeService(id: '17', name: 'Local News', icon: Icons.newspaper, color: Color(0xFF424242), isInnovation: true),
+      const HomeService(id: '18', name: 'Blockchain ID', icon: Icons.security, color: Colors.blueAccent, isInnovation: true),
+      const HomeService(id: '19', name: 'Micro-Charity', icon: Icons.volunteer_activism, color: Colors.redAccent, isInnovation: true),
+      const HomeService(id: '20', name: 'Offline Sync', icon: Icons.wifi_off, color: Colors.black54, isInnovation: true),
+    ];
+  }
+}

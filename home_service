@@ -1,0 +1,17 @@
+import 'package:flutter/material.dart';
+
+class HomeService {
+  final String id;
+  final String name;
+  final IconData icon;
+  final Color color;
+  final bool isInnovation;
+
+  const HomeService({
+    required this.id,
+    required this.name,
+    required this.icon,
+    required this.color,
+    this.isInnovation = false,
+  });
+}

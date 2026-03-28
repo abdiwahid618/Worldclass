@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+
+class AppRouter {
+  static final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+  static final GoRouter router = GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: '/home',
+    routes: [
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return MainScaffoldWithNavBar(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: '/wallet',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Wallet'))),
+          ),
+          GoRoute(
+            path: '/orders',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Orders'))),
+          ),
+          GoRoute(
+            path: '/messages',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Messages'))),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Profile'))),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+class MainScaffoldWithNavBar extends StatefulWidget {
+  final Widget child;
+
+  const MainScaffoldWithNavBar({super.key, required this.child});
+
+  @override
+  State<MainScaffoldWithNavBar> createState() => _MainScaffoldWithNavBarState();
+}
+
+class _MainScaffoldWithNavBarState extends State<MainScaffoldWithNavBar> {
+  int _currentIndex = 0;
+
+  void _onItemTapped(int index, BuildContext context) {
+    setState(() {
+      _currentIndex = index;
+    });
+    
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        context.go('/wallet');
+        break;
+      case 2:
+        context.go('/orders');
+        break;
+      case 3:
+        context.go('/messages');
+        break;
+      case 4:
+        context.go('/profile');
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => _onItemTapped(index, context),
+        backgroundColor: Colors.white,
+        elevation: 10,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.account_balance_wallet_outlined),
+            selectedIcon: Icon(Icons.account_balance_wallet),
+            label: 'Wallet',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.receipt_long_outlined),
+            selectedIcon: Icon(Icons.receipt_long),
+            label: 'Orders',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.chat_bubble_outline),
+            selectedIcon: Icon(Icons.chat_bubble),
+            label: 'Messages',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}

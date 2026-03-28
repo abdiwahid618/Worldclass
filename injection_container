@@ -1,0 +1,25 @@
+import 'package:get_it/get_it.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  // Features - Home
+  // BLoC
+  // sl.registerFactory(() => HomeBloc(sl()));
+  
+  // Use cases
+  // sl.registerLazySingleton(() => GetServices(sl()));
+  
+  // Repository
+  // sl.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(remoteDataSource: sl()));
+  
+  // Data sources
+  // sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(client: sl()));
+
+  // Core
+  // sl.registerLazySingleton(() => NetworkInfo(sl()));
+
+  // External
+  // sl.registerLazySingleton(() => FirebaseFirestore.instance);
+  // sl.registerLazySingleton(() => FirebaseAuth.instance);
+}

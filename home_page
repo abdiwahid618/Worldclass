@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
+import '../bloc/home_state.dart';
+import '../widgets/service_icon_widget.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeBloc()..add(LoadHomeServices()),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8F9FA),
+        body: SafeArea(
+          child: BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is HomeLoaded) {
+                return CustomScrollView(
+                  slivers: [
+                    // Modern App Bar
+                    SliverAppBar(
+                      floating: true,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Good Morning, Alex',
+                            style: TextStyle(color: Colors.grey.shade800, fontSize: 14),
+                          ),
+                          const Text(
+                            'What do you need today?',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.notifications_none, color: Colors.black),
+                          onPressed: () {},
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 16.0),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=11'),
+                          ),
+                        )
+                      ],
+                    ),
+                    
+                    // Search Bar (Voice & Visual Search enabled)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search services, products, or ask AI...',
+                              border: InputBorder.none,
+                              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                              suffixIcon: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.mic, color: Colors.blue),
+                                    onPressed: () {}, // Voice-Commerce trigger
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.camera_alt, color: Colors.purple),
+                                    onPressed: () {}, // AI Visual Search trigger
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Services Grid
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      sliver: SliverGrid(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 16.0,
+                          crossAxisSpacing: 16.0,
+                          childAspectRatio: 0.8,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final service = state.services[index];
+                            return ServiceIconWidget(service: service);
+                          },
+                          childCount: state.services.length,
+                        ),
+                      ),
+                    ),
+                    
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: 30),
+                    ),
+                  ],
+                );
+              } else if (state is HomeError) {
+                return Center(child: Text(state.message));
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
